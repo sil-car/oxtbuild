@@ -62,6 +62,8 @@ def ask(question):
     return answer if len(answer) > 1 else default
 
 def write_xml_file(filepath_obj, xml_tree, docstring=None):
+    filepath_obj.parent.mkdir(exist_ok=True)
+    # filepath_obj.touch()
     xml_tree.write(
         filepath_obj,
         pretty_print=True,
@@ -145,8 +147,9 @@ def verify_description(description_file):
     if etree.tostring(tree) != tree_str_init: # don't overwrite if unchanged
         write_xml_file(description_file, tree)
 
-def generate_manifest(src_dir):
-    manifest_file = src_dir / 'META-INF/manifest.xml'
+def generate_manifest(manifest_file):
+    # manifest_file = src_dir / 'META-INF/manifest.xml'
+    src_dir = manifest_file.parents[1]
     nsmap = {'manifest': "http://openoffice.org/2001/manifest"}
     mime_base = 'application/vnd.sun.star'
     supported_exts = {

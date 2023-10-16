@@ -35,9 +35,7 @@ def main():
     }
 
     # Generate manifest.xml file.
-    manifest_file_path = src_dir / required_files.get('manifest')
-    if not manifest_file_path.is_file():
-        xmltools.generate_manifest(src_dir)
+    xmltools.generate_manifest(src_dir / required_files.get('manifest'))
 
     # Generate/verify description.xml file.
     xmltools.verify_description(src_dir / required_files.get('description'))

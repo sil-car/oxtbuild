@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+dependencies = [
+    "lxml",
+]
+name = "oxtbuild"
+version = "0.1"
+dynamic = ["readme"]
+
+[project.scripts]
+oxtbuild = "oxtbuild.app:main"
+
+[tool.setuptools]
+packages = ["oxtbuild"]
+
+[tool.setuptools.dynamic]
+readme = {file = ["README.md"], content-type = "text/plain"}
