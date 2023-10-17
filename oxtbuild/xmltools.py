@@ -1,6 +1,7 @@
 import re
 
 from lxml import etree
+from util import get_filtered_file_list
 
 
 DESCRIPTION_DATA = {
@@ -147,20 +148,16 @@ def verify_description(description_file):
     if etree.tostring(tree) != tree_str_init: # don't overwrite if unchanged
         write_xml_file(description_file, tree)
 
-def generate_manifest(manifest_file):
+def generate_manifest(manifest_file, manifest_exts):
     # manifest_file = src_dir / 'META-INF/manifest.xml'
-    src_dir = manifest_file.parents[1]
     nsmap = {'manifest': "http://openoffice.org/2001/manifest"}
     mime_base = 'application/vnd.sun.star'
-    supported_exts = {
-        '.xcu': '.configuration-data',
-    }
-    # Find all files required to be listed in manifest.xml.
-    m_files = []
-    for ext in supported_exts.keys():
-        m_files.extend(src_dir.glob(f'**/*{ext}'))
-    # Convert to relative paths.
-    m_files = [p.relative_to(src_dir) for p in m_files]
+    src_dir = manifest_file.parents[1]
+
+    # Get list of files to include in manifest.
+    file_list = get_filtered_file_list(manifest_exts.keys(), src_dir)
+    m_files = [p.relative_to(src_dir) for p in file_list]
+
     # Generate XML.
     docstring = '<!DOCTYPE manifest:manifest PUBLIC "-//OpenOffice.org//DTD Manifest 1.0//EN" "Manifest.dtd">'
     manifest = etree.Element(f"{{{nsmap.get('manifest')}}}manifest", nsmap=nsmap)
@@ -169,7 +166,7 @@ def generate_manifest(manifest_file):
         manifest.append(etree.Element(
             f"{{{nsmap.get('manifest')}}}file-entry",
             {
-                f"{{{nsmap.get('manifest')}}}media-type": f"{mime_base}{supported_exts.get(ext)}",
+                f"{{{nsmap.get('manifest')}}}media-type": f"{mime_base}{manifest_exts.get(ext)}",
                 f"{{{nsmap.get('manifest')}}}full-path": str(m_file),
             },
             nsmap=nsmap,
