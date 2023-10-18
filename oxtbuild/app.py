@@ -9,10 +9,9 @@
 import sys
 import zipfile
 
-from pathlib import Path
-
 import xmltools
 
+from util import get_args
 from util import get_filtered_file_list
 
 
@@ -22,19 +21,24 @@ def verify_file_in_zip(oxt_zip, filerelpath):
         exit(1)
 
 def main():
-    src_dir = Path(sys.argv[1])
-    src_parent_dir = src_dir.parent
-
-    if not src_dir.is_dir():
-        print(f"Error: Not a directory: {src_dir}")
-        exit(1)
-
-    oxt_path = src_parent_dir / f"{src_dir.name}.oxt"
-
+    args = get_args()
     required_files = {
         'manifest': 'META-INF/manifest.xml',
         'description': 'description.xml',
     }
+
+    src_dir = args.folder
+    if not src_dir.is_dir():
+        print(f"Error: Not a directory: {src_dir}")
+        exit(1)
+
+    # Verify description.xml structure.
+    xmltools.verify_description_template(src_dir / required_files.get('description'))
+    xmltools.verify_description_data(src_dir / required_files.get('description'), args.guided)
+    exit()
+
+    src_parent_dir = src_dir.parent
+    oxt_path = src_parent_dir / f"{src_dir.name}.oxt"
 
     # Generate manifest.xml file.
     manifest_exts = {
@@ -51,8 +55,8 @@ def main():
     ]
     allowed_exts.extend(manifest_exts.keys())
 
-    # Generate/verify description.xml file.
-    xmltools.verify_description(src_dir / required_files.get('description'))
+    # # Generate/verify description.xml file.
+    # xmltools.verify_description(src_dir / required_files.get('description'))
 
     # Create zipfile & verify contents.
     with zipfile.ZipFile(oxt_path, mode='w', compression=zipfile.ZIP_DEFLATED) as z:
