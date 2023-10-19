@@ -42,6 +42,12 @@ def main():
 
     # Generate manifest.xml file.
     manifest_exts = {
+        # Some file types have ambiguous media-types, so they're not automatically included.
+        # e.g. *.jar, *.so, *.txt, extensionless files, and library folders
+        '.dll': '.uno-component;type=native;platform=Windows',
+        '.py': '.uno-component;type=Python',
+        '.rdb': '.uno-typelibrary;type=RDB',
+        '.xcs': '.configuration-schema',
         '.xcu': '.configuration-data',
     }
     manifest_xml_file = src_dir / required_files.get('manifest')
