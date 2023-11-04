@@ -2,8 +2,8 @@ import re
 
 from lxml import etree
 
-import config 
-from util import get_filtered_file_list
+from . import config 
+from .util import get_filtered_file_list
 
 
 DESCRIPTION_DATA = {

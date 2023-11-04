@@ -9,10 +9,10 @@
 import sys
 import zipfile
 
-import xmltools
+from . import xmltools
 
-from util import get_args
-from util import get_filtered_file_list
+from .util import get_args
+from .util import get_filtered_file_list
 
 
 def verify_file_in_zip(oxt_zip, filerelpath):
