@@ -138,11 +138,12 @@ def ensure_comment(parent, comment):
             comment_elem.text = COMMENT_PKG
 
 def verify_description_template(description_file):
+    description_file_string = str(description_file)
     # Get or initialize XML tree.
     if description_file.is_file():
         print("Verifying existing \"description.xml\".")
         try:
-            tree = etree.parse(description_file)
+            tree = etree.parse(description_file_string)
         except etree.XMLSyntaxError as e:
             if len(description_file.read_text()) == 0: # file is empty
                 tree = initialize_xml_tree()
@@ -185,7 +186,8 @@ def verify_description_data(description_file, guided):
     """Check that each required attribute and text value is not empty.
     If "guided" option has been used, walk user through data entry.
     """
-    tree = etree.parse(description_file)
+    description_file_string = str(description_file)
+    tree = etree.parse(description_file_string)
     root = tree.getroot()
     tree_str_init = etree.tostring(tree)
 
