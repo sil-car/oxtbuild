@@ -82,7 +82,7 @@ def ask(question):
 def write_xml_file(filepath_obj, xml_tree, docstring=None):
     filepath_obj.parent.mkdir(exist_ok=True)
     xml_tree.write(
-        filepath_obj,
+        str(filepath_obj),
         pretty_print=True,
         xml_declaration=True,
         encoding='UTF-8',
