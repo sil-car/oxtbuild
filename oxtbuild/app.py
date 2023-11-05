@@ -35,7 +35,6 @@ def main():
     # Verify description.xml structure.
     xmltools.verify_description_template(src_dir / required_files.get('description'))
     xmltools.verify_description_data(src_dir / required_files.get('description'), args.guided)
-    exit()
 
     src_parent_dir = src_dir.parent
     oxt_path = src_parent_dir / f"{src_dir.name}.oxt"
